@@ -62,14 +62,14 @@ func TestExpiration(t *testing.T) {
 		t.Errorf("Expected `z` to have expired")
 	}
 	_, exists = cache.items["y"]
-	if !exists {
-		t.Errorf("Expected `y` to not have expired")
+	if exists {
+		t.Errorf("Expected `y` to have expired")
 	}
 	cache.mutex.RUnlock()
 
 	count = cache.Count()
-	if count != 1 {
-		t.Errorf("Expected cache to contain 1 item")
+	if count != 0 {
+		t.Errorf("Expected cache to contain 0 items")
 	}
 
 	<-time.After(600 * time.Millisecond)

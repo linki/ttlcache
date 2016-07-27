@@ -27,7 +27,14 @@ func TestExpired(t *testing.T) {
 func TestTouch(t *testing.T) {
 	item := &Item{data: "blahblah"}
 	item.touch(time.Second)
-	if item.expired() {
-		t.Errorf("Expected item to not be expired once touched")
+	if !item.expired() {
+		t.Errorf("Expected item to be expired despite touched")
+	}
+
+	expiration := time.Now().Add(0 - time.Second)
+	item.expires = &expiration
+	item.touch(time.Second)
+	if !item.expired() {
+		t.Errorf("Expected item to be expired once time has passed despite touched")
 	}
 }
