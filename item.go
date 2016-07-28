@@ -13,7 +13,10 @@ type Item struct {
 }
 
 func (item *Item) touch(duration time.Duration) {
-	// no-op
+	item.Lock()
+	expiration := time.Now().Add(duration)
+	item.expires = &expiration
+	item.Unlock()
 }
 
 func (item *Item) expired() bool {

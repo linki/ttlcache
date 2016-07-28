@@ -16,12 +16,7 @@ type Cache struct {
 func (cache *Cache) Set(key string, data []string) {
 	cache.mutex.Lock()
 	item := &Item{data: data}
-
-	item.Lock()
-	expiration := time.Now().Add(cache.ttl)
-	item.expires = &expiration
-	item.Unlock()
-
+	item.touch(cache.ttl)
 	cache.items[key] = item
 	cache.mutex.Unlock()
 }
@@ -35,7 +30,6 @@ func (cache *Cache) Get(key string) (data []string, found bool) {
 		data = nil
 		found = false
 	} else {
-		item.touch(cache.ttl)
 		data = item.data
 		found = true
 	}

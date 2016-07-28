@@ -43,8 +43,8 @@ func TestExpiration(t *testing.T) {
 	}
 
 	<-time.After(500 * time.Millisecond)
+	cache.Get("y")
 	cache.mutex.Lock()
-	cache.items["y"].touch(time.Second)
 	item, exists := cache.items["x"]
 	cache.mutex.Unlock()
 	if !exists || len(item.data) != 1 || item.data[0] != "1" || item.expired() {
