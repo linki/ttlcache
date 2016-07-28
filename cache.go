@@ -13,7 +13,7 @@ type Cache struct {
 }
 
 // Set is a thread-safe way to add new items to the map
-func (cache *Cache) Set(key string, data string) {
+func (cache *Cache) Set(key string, data []string) {
 	cache.mutex.Lock()
 	item := &Item{data: data}
 
@@ -28,11 +28,11 @@ func (cache *Cache) Set(key string, data string) {
 
 // Get is a thread-safe way to lookup items
 // Every lookup, also touches the item, hence extending it's life
-func (cache *Cache) Get(key string) (data string, found bool) {
+func (cache *Cache) Get(key string) (data []string, found bool) {
 	cache.mutex.Lock()
 	item, exists := cache.items[key]
 	if !exists || item.expired() {
-		data = ""
+		data = nil
 		found = false
 	} else {
 		item.touch(cache.ttl)

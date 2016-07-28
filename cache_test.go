@@ -12,16 +12,16 @@ func TestGet(t *testing.T) {
 	}
 
 	data, exists := cache.Get("hello")
-	if exists || data != "" {
+	if exists || data != nil {
 		t.Errorf("Expected empty cache to return no data")
 	}
 
-	cache.Set("hello", "world")
+	cache.Set("hello", []string{"world"})
 	data, exists = cache.Get("hello")
 	if !exists {
 		t.Errorf("Expected cache to return data for `hello`")
 	}
-	if data != "world" {
+	if len(data) != 1 || data[0] != "world" {
 		t.Errorf("Expected cache to return `world` for `hello`")
 	}
 }
@@ -32,9 +32,9 @@ func TestExpiration(t *testing.T) {
 		items: map[string]*Item{},
 	}
 
-	cache.Set("x", "1")
-	cache.Set("y", "z")
-	cache.Set("z", "3")
+	cache.Set("x", []string{"1"})
+	cache.Set("y", []string{"z"})
+	cache.Set("z", []string{"3"})
 	cache.startCleanupTimer()
 
 	count := cache.Count()
@@ -47,7 +47,7 @@ func TestExpiration(t *testing.T) {
 	cache.items["y"].touch(time.Second)
 	item, exists := cache.items["x"]
 	cache.mutex.Unlock()
-	if !exists || item.data != "1" || item.expired() {
+	if !exists || len(item.data) != 1 || item.data[0] != "1" || item.expired() {
 		t.Errorf("Expected `x` to not have expired after 200ms")
 	}
 
