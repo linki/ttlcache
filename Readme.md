@@ -1,6 +1,7 @@
 ## TTLCache - an in-memory LRU cache with expiration
 
-TTLCache is a minimal wrapper over a string map in golang, entries of which are
+TTLCache is a minimal wrapper over a map of strings to a slice of strings
+in golang, entries of which are
 
 1. Thread-safe
 2. Auto-Expiring after a certain time
