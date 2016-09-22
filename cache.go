@@ -24,7 +24,7 @@ func (cache *Cache) Set(key string, data []string) {
 // Get is a thread-safe way to lookup items
 // Every lookup, also touches the item, hence extending it's life
 func (cache *Cache) Get(key string) (data []string, found bool) {
-	cache.mutex.Lock()
+	cache.mutex.RLock()
 	item, exists := cache.items[key]
 	if !exists || item.expired() {
 		data = nil
@@ -33,7 +33,7 @@ func (cache *Cache) Get(key string) (data []string, found bool) {
 		data = item.data
 		found = true
 	}
-	cache.mutex.Unlock()
+	cache.mutex.RUnlock()
 	return
 }
 
